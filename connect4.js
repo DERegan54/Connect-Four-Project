@@ -22,15 +22,21 @@ const board = []; // array of rows, each row is array of cells  (board[y][x])
 // TODO: set "board" to empty HEIGHT x WIDTH matrix array
 // These are the two arrays that will house the game board, which will be a table that we
 // will create below.  These arrays will contain the data 
+// function makeBoard() {
+//   // Here we are creating the outer array that will house the arrays that make up 
+//   // the rows of the matrix
+//   let arr = new Array(HEIGHT);
+//   // This loop iterates 6 times to create the number of inner arrays equal to the height 
+//   // specified above, which will be the rows of the game board.
+//   for(let i=0; i<HEIGHT; i++){
+//     // Here each iteration creates a new array
+//     arr[i] = new Array(WIDTH);
+//   }
+// }
+
 function makeBoard() {
-  // Here we are creating the outer array that will house the arrays that make up 
-  // the rows of the matrix
-  let arr = new Array(HEIGHT);
-  // This loop iterates 6 times to create the number of inner arrays equal to the height 
-  // specified above, which will be the rows of the game board.
-  for(let i=0; i<HEIGHT; i++){
-    // Here each iteration creates a new array
-    arr[i] = new Array(WIDTH);
+  for (let y = 0; y < HEIGHT; y++){
+    board.push(Array.from({ length: WIDTH }));
   }
 }
 
@@ -40,7 +46,7 @@ function makeBoard() {
 // This function is creating the HTML table and row of columns that will later be clickable
 function makeHtmlBoard() {
   // Here we are getting the "htmlBoard" variable from the element in HTML w/ID of "board"
-  const htmlBoard = document.querySelector("#board");
+  const board = document.querySelector("#board");
   // Here we are creating the top, clickable row, that will be where each player 
   // "drops" their game piece into the column.  We will then append it to the htmlBoard 
   const top = document.createElement("tr");
@@ -48,7 +54,7 @@ function makeHtmlBoard() {
   top.setAttribute("id", "column-top");
   // Here we are making that top row clickable.  The function in this event 
   // listener (defined below) will be what will mark the <td> as 'occupied by a game piece'
-  top.addEventListener("click", handleClick(evt);
+  top.addEventListener("click", handleClick);
   //This loop is iterating 7 times to create the number of clickable cells equal to the width  
   //specified above in the top table row, which will then be the tops of the columns the player
   //  will "drop" their game piece into
@@ -61,7 +67,8 @@ function makeHtmlBoard() {
     top.append(headCell);
   }
   // Here we are adding the top table row to the matrix 
-  htmlBoard.append(top);
+  // htmlBoard.append(top);
+  board.append(top);
   //(X) TODO: add comment for this code
   // This loop is iterating 6 times to create the remaining game board rows equal to the height 
   // specified above
@@ -79,87 +86,127 @@ function makeHtmlBoard() {
       row.append(cell);
     }
     // This is where the newly-created rows are being added to the game board
-    htmlBoard.append(row);
+    // htmlBoard.append(row);
+    board.append(row);
   }
 }
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 // TODO: write the real version of this, rather than always returning 0
+// function findSpotForCol(x) {
+//   if((y, x).class = occupied){
+//     return ;
+// } else if((y, x) = null) {
+//   placeInTable(y,x);
+//   }
+// }
+
 function findSpotForCol(x) {
-  if((y, x).class = occupied){
-    return ;
-} else if((y, x) = null) {
-  placeInTable(y,x);
+  for (let y = HEIGHT-1; y >= 0; y--) {
+    if (!board[y][x]) {
+      return y;
+    }
   }
+  return null;
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
  // TODO: make a div and insert into correct table cell
+// function placeInTable(y, x) {
+//   if(currPlayer = 1){ 
+//     const redPiece = document.createElement("div");
+//     redPiece.setAttribute("class", "piece.player1");
+//     (y, x).append(redPiece);
+//     (y, x).classList.add("occupied")
+//   } else if(currPlayer = 2){
+//     const bluePiece = document.createElement("div");
+//     bluePiece.setAttribute("class", "piece.player2");
+//     (y, x).append(bluePiece);
+//     (y, x).classList.add("occupied")
+//   }
+// }
+
 function placeInTable(y, x) {
-  if(currPlayer = 1){ 
-    const redPiece = document.createElement("div");
-    redPiece.setAttribute("class", "piece.player1");
-    (y, x).append(redPiece);
-    (y, x).classList.add("occupied")
-  } else if(currPlayer = 2){
-    const bluePiece = document.createElement("div");
-    bluePiece.setAttribute("class", "piece.player2");
-    (y, x).append(bluePiece);
-    (y, x).classList.add("occupied")
-  }
+  const piece = document.createElement('div');
+  piece.classList.add('piece');
+  piece.classList.add(`p${currPlayer}`);
+  piece.style.top = -50 * (y + 2);
+
+  const spot = document.getElementById(`${y}-${x}`);
+  spot.append(piece);
 }
 
 /** endGame: announce game end */
 //(X) TODO: pop up alert message
-function endGame() {
-    alert("GAME OVER!");
-  }
+// function endGame() {
+//     alert("GAME OVER!");
+//   }
+function endGame(msg) {
+  return alert(msg);
+}
  
-
 
 /** handleClick: handle click of column top to play piece */
 // get x from ID of clicked cell
+// function handleClick(evt) {
+//   clickCount++;
+//   const x = +evt.target.id;
+
 function handleClick(evt) {
-  clickCount++;
   const x = +evt.target.id;
-  
-  // get next spot in column (if none, ignore click)
+
+//   // get next spot in column (if none, ignore click)
+//   const y = findSpotForCol(x);
+//   if (y === null) {
+//     return placeInTable(y, x);
+//   } else if (y.classList.contains("occupied")){
+//     return (y + 1) = findSpotForCol(x);
+//   }
+
   const y = findSpotForCol(x);
   if (y === null) {
-    return placeInTable(y, x);
-  } else if (y.classList.contains("occupied")){
-    return (y + 1) = findSpotForCol(x);
+    return;
   }
 
-  // place piece in board and add to HTML table
-  // TODO: add line to update in-memory board
+//   // place piece in board and add to HTML table
+//   // TODO: add line to update in-memory board
+
+board[y][x] = currPlayer;
+placeInTable(y,x);
   
 
-  // check for win
+//   // check for win
   if (checkForWin()) {
     return endGame(`Player ${currPlayer} won!`);
   }
 
-  // check for tie
-  // (X) TODO: check if all cells in board are filled; if so call, call endGame
-  if(checkForTie()) {
-    return endGame("It's a Tie!");
+//   // check for tie
+//   // (X) TODO: check if all cells in board are filled; if so call, call endGame
+//   if(checkForTie()) {
+//     return endGame("It's a Tie!");
+//   }
+
+//   function checkForTie(){
+//     cells.every(function (cells) {
+//       cells.classList.contains("occupied");
+//       return true;
+//     }
+  // }
+
+  if (board.every(row => row.every(cell => cell))) {
+    return endGame( 'Tie!');
   }
 
-  function checkForTie(){
-    cells.every(function (cells) {
-      cells.classList.contains("occupied");
-      return true;
-    })
-  }  
-  
-  // switch players
-  // (X) TODO: switch currPlayer 1 <-> 2
-  if(clickCount % 2 !== 0){
-    currPlayer = 1
-  } else if(clickCount % 2 === 0){
-    currPlayer = 2;
-  }
+//   // switch players
+//   // (X) TODO: switch currPlayer 1 <-> 2
+//   if(clickCount % 2 !== 0){
+//     currPlayer = 1
+//   } else if(clickCount % 2 === 0){
+//     currPlayer = 2;
+//   }
+// }
+
+  currPlayer = currPlayer === 1 ? 2 : 1;
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
