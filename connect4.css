@@ -1,17 +1,23 @@
 /* game board table */
-body {
-  background-image: url("connect-4-game.jpg.webp");
-}
 
 h1 {
   color: darkblue;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   text-align: center;
+  text-decoration: underline;
   width: 300px;
   margin-top: 102px;
   margin-right: auto;
   margin-left: auto;
   background-color: white;
+}
+
+div {
+  text-align: center;
+}
+
+img {
+  width: 250px;
 }
 
 .center {
@@ -31,11 +37,13 @@ h1 {
 }
 
 .piece {
+  position: relative;
   margin: 5px;
   width: 80%;
   height: 80%;
   border-radius: 50%;
 }
+
 .piece.p1 {
   background-color: red;
   
